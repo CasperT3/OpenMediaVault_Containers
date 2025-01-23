@@ -1,0 +1,17 @@
+---
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1001  #check using "id username" in SSH
+      - PGID=100   #check using "id username" in SSH
+      - TZ=Asia/Riyadh # Change timezone if different
+      - VERSION=docker
+      - PLEX_CLAIM= #optional
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/plex/config:/config # Change this path
+      - /link/to/media/tv:/tv # Change this path
+      - /link/to/media/movies:/movies # Change this path
+    restart: unless-stopped
