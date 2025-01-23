@@ -1,0 +1,17 @@
+---
+version: "2.1"
+services:
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1001
+      - PGID=100
+      - TZ=Asia/Riyadh
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/readerr/data:/config
+      - /link/to/media/books:/books #optional
+      - /link/to/media/downloads:/downloads #optional
+    ports:
+      - 8787:8787
+    restart: unless-stopped
