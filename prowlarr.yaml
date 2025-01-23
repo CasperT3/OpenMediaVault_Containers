@@ -1,0 +1,14 @@
+---
+services:
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1001
+      - PGID=100
+      - TZ=Asia/Riyadh
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/prowlarr/data:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
