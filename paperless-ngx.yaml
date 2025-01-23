@@ -1,0 +1,15 @@
+---
+services:
+  paperless-ngx:
+    image: lscr.io/linuxserver/paperless-ngx:latest
+    container_name: paperless-ngx
+    environment:
+      - PUID=1001
+      - PGID=100
+      - TZ=Asia/Riyadh
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/paperless_ngx/config:/config
+      - CHANGE_TO_COMPOSE_DATA_PATH/paperless_ngx/data:/data
+    ports:
+      - 8020:8000 #changed port for conflict with portainer otherwise use 8000:8000
+    restart: unless-stopped
