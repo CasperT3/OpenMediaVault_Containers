@@ -1,0 +1,19 @@
+---
+services:
+  deluge:
+    image: lscr.io/linuxserver/deluge:latest
+    container_name: deluge
+    environment:
+      - PUID=1001 #check using "id username" in SSH
+      - PGID=100 #check using "id username" in SSH
+      - TZ=Asia/Riyadh
+      - DELUGE_LOGLEVEL=error #optional
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/deluge/config:/config #using CHANGE_TO_COMPOSE_DATA_PATH will work automatically if you setup docker compose correctly
+      - /link/to/media/downloads:/downloads
+    ports:
+      - 8112:8112
+      - 6881:6881
+      - 6881:6881/udp
+      - 58846:58846 #optional
+    restart: unless-stopped
