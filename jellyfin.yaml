@@ -1,0 +1,19 @@
+---
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1001 #check using "id username" in SSH
+      - PGID=100 #check using "id username" in SSH
+      - TZ=Asia/Riyadh
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/jellyfin/library:/config
+      - /link/to/media/tv:/data/tvshows
+      - /link/to/media/movies:/data/movies
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+      - 7359:7359/udp #optional
+      - 1900:1900/udp #optional
+    restart: unless-stopped
