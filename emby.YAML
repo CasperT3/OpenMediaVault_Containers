@@ -1,0 +1,19 @@
+---
+services:
+  emby:
+    image: lscr.io/linuxserver/emby:latest
+    container_name: emby
+    environment:
+      - PUID=1001
+      - PGID=100
+      - TZ=Asia/Riyadh
+    volumes:
+      - CHANGE_TO_COMPOSE_DATA_PATH/emby/library:/config
+      - /main_pool/media/tvseries:/data/tvshows
+      - /main_pool/media/movies:/data/movies
+      - /main_pool/media/books:/data/books
+      - /opt/vc/lib:/opt/vc/lib #optional
+    ports:
+      - 8096:8096
+      - 8920:8920 #optional
+    restart: unless-stopped
