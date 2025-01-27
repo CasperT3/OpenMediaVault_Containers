@@ -1,0 +1,12 @@
+services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_INCLUDE_STOPPED: "true"
+      WATCHTOWER_ROLLING_RESTART: "true"
+      WATCHTOWER_TIMEOUT: 30s  # Increased timeout to 30 seconds
+      WATCHTOWER_NOTIFICATION_SLACK_WEBHOOK_URL: <your_slack_webhook_url>
+      WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: <your_slack_channel>
