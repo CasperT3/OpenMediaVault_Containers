@@ -10,3 +10,4 @@ services:
       WATCHTOWER_TIMEOUT: 30s  # Increased timeout to 30 seconds
       WATCHTOWER_NOTIFICATION_SLACK_WEBHOOK_URL: <your_slack_webhook_url>
       WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: <your_slack_channel>
+    restart: unless-stopped
