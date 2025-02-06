@@ -9,7 +9,7 @@ services:
       - TZ=Asia/Riyadh
 
     volumes:
-      - CHANGE_TO_COMPOSE_DATA_PATH/dashy/config:/config #using CHANGE_TO_COMPOSE_DATA_PATH will work automatically if you setup docker compose correctly
+      - CHANGE_TO_COMPOSE_DATA_PATH/dashy/config:/app/user-data #using CHANGE_TO_COMPOSE_DATA_PATH will work automatically if you setup docker compose correctly
     ports:
       - 4000:8080
     restart: unless-stopped
