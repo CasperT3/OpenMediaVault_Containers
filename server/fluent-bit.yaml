@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  fluent-bit:
+    image: fluent/fluent-bit:latest
+    container_name: fluent-bit
+    networks:
+      - proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - fluent-bit-config:/fluent-bit/etc
+#    ports:
+#      - "24224:24224" # Optional if external logging is needed
+    command: >
+      -i docker
+      -o loki
+      -p host=loki
+      -p port=3100
+
+volumes:
+  fluent-bit-config:
+
+networks:
+  proxy:
+    external: true
