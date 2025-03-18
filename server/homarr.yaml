@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:latest
+    container_name: homarr
+    restart: unless-stopped
+    ports:
+      - "7575:7575" # Port for accessing the Homarr dashboard
+    volumes:
+      - homarr_data:/appdata # Named volume for persistent data storage
+      - /var/run/docker.sock:/var/run/docker.sock # Optional: Docker integration for enhanced functionality
+    environment:
+      - SECRET_ENCRYPTION_KEY=   #use "openssl rand -hex 32" to generate a random number and put it here
+    networks:
+      - proxy
+
+volumes:
+  homarr_data: # Define the named volume for Homarr
+    driver: local # Uses the default local driver
+
+networks:
+  proxy:
+    external: true
