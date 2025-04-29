@@ -1,0 +1,65 @@
+version: '3.8'
+
+# Define named volumes for persistent data
+volumes:
+  uptime_kuma_data:
+  glances_data:
+  caddy_data:
+  caddy_config:
+
+services:
+  # Watchtower: Automatically updates Docker containers
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Needs access to Docker socket
+    # Checks for updates daily at 4 AM. Customize schedule as needed.
+    command: --cleanup --schedule "0 4 * * *"
+
+  # Uptime Kuma: Service uptime monitoring
+  uptime-kuma:
+    image: louislam/uptime-kuma:1 # Using latest stable v1 tag
+    container_name: uptime-kuma
+    restart: unless-stopped
+    ports:
+      - "3001:3001" # Expose Uptime Kuma web UI port
+    volumes:
+      - uptime_kuma_data:/app/data # Persistent data volume
+
+  # Glances: System monitoring via web UI
+  glances:
+    image: nicolargo/glances:latest-full # Use 'latest-alpine' for smaller image if needed
+    container_name: glances
+    restart: unless-stopped
+    ports:
+      - "61208:61208" # Expose Glances web UI port
+    pid: host # Allows Glances to see all host processes
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Read-only access to Docker socket
+      - glances_data:/glances/conf # Optional persistent config
+      # CAUTION: Glances can use significant RAM/CPU on low-spec systems.
+      # Monitor its usage carefully after starting.
+      # Consider adding specific host mounts only if needed and understood:
+      # - /proc:/host/proc:ro
+      # - /sys:/host/sys:ro
+    environment:
+      - GLANCES_OPT=-w # Run in web server mode
+
+  # Caddy: Web server to serve Homer dashboard
+  caddy:
+    image: caddy:latest
+    container_name: caddy_server
+    restart: unless-stopped
+    ports:
+      # Map host port 8080 to Caddy's internal port 80
+      - "8080:80"
+    volumes:
+      # Mount the Caddyfile we created earlier
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      # Mount the Homer assets directory into the path Caddy serves from
+      - ./homer_assets:/srv/homer
+      # Named volumes for Caddy's persistent data (like certs if using HTTPS)
+      - caddy_data:/data
+      - caddy_config:/config
