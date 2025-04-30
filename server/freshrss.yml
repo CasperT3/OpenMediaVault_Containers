@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  freshrss:
+    image: lscr.io/linuxserver/freshrss:latest
+    container_name: freshrss
+    restart: unless-stopped
+    environment:
+      - PUID=1000  # Replace with your user ID
+      - PGID=1000  # Replace with your group ID
+      - TZ=Europe/London  # Set your timezone
+    volumes:
+      - freshrss_data:/config
+    networks:
+      - proxy  # Connect to the same network as NPM
+
+volumes:
+  freshrss_data:
+
+networks:
+  proxy:
+    external: true
