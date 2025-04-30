@@ -1,0 +1,51 @@
+version: "3.7"
+
+services:
+  wg-easy:
+    image: weejewel/wg-easy
+    container_name: wg-easy
+    # depends_on removed as pihole is gone
+    restart: unless-stopped
+    environment:
+      - WG_HOST=209.38.160.109 # Your Droplet's Public IP
+      - PASSWORD=saz123 # Web UI login - CHANGE THIS
+      - WG_PORT=51820
+      # **** CHANGED: Point wg-easy clients to a public DNS server ****
+      - WG_DEFAULT_DNS=1.1.1.1 # Cloudflare DNS (or use 8.8.8.8, 9.9.9.9, etc.)
+    volumes:
+      - wg-easy-data:/etc/wireguard
+    ports:
+      # Expose wg-easy Web UI
+      - "51821:51821/tcp"
+      # Expose WireGuard VPN port publicly
+      - "51820:51820/udp"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv4.ip_forward=1
+
+  tailscale:
+    container_name: tailscale
+    image: tailscale/tailscale:latest
+    hostname: digitalocean-droplet # Hostname that will appear in Tailscale admin console
+    network_mode: host # Shares host's network stack
+    cap_add:
+      - NET_ADMIN
+      # - NET_RAW # Add if needed
+    volumes:
+      - tailscale_state:/var/lib/tailscale # Persistent state
+      - /dev/net/tun:/dev/net/tun # TUN device access
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY} # From .env file
+      - TS_STATE_DIR=/var/lib/tailscale
+      # --accept-dns=false: Prevents Tailscale from overriding the host's DNS settings. Good default.
+      # Add other args like --advertise-exit-node if needed for TAILSCALE clients
+      - TS_EXTRA_ARGS=--accept-dns=false
+    restart: unless-stopped
+
+# Define only the volumes needed for the remaining services
+volumes:
+  wg-easy-data:
+  tailscale_state:
