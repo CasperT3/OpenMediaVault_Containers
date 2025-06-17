@@ -41,10 +41,12 @@ sudo nano /etc/systemd/system/tika.service
 
 Paste the following content into the file:
 
-\[Unit\]  
+\ini
+
+[Unit]  
 Description=Apache Tika Server  
 After=network.target  
-<br/>\[Service\]  
+[Service]  
 Type=simple  
 ExecStart=/usr/bin/java -jar /opt/tika/tika-server.jar --host 0.0.0.0 --port 9998  
 Restart=always  
@@ -53,8 +55,10 @@ Group=root # Running as root for proven stability in this LXC setup
 WorkingDirectory=/opt/tika  
 StandardOutput=journal  
 StandardError=journal  
-<br/>\[Install\]  
+[Install]  
 WantedBy=multi-user.target  
+
+\
 
 Save and exit the editor: Press Ctrl+X, then Y to confirm saving, and Enter.
 
